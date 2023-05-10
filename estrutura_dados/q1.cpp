@@ -1,3 +1,6 @@
+/*
+Escreva uma função que dada uma lista de adjacências LA, o número de vértices de  G ,  n , e um vértice  u∈V , retorne o grau de entrada e o grau de saída de  u , representados por um pair. Como saída, imprima (para cada caso de teste) o vértice  u , o grau de entrada e o grau de saída.
+*/
 #include<iostream>
 #include<vector>
 #include<utility>
@@ -13,10 +16,12 @@ ii retornaGrau(vi* LA, int n, int u)
   ii grau;
   grau.first = 0;
   grau.second = LA[u].size();
+
   for(int i = 0; i < n; i++)
-    for(int j = 0; LA[i].size(); j++)
+    for(int j = 0; j < LA[i].size(); j++)
       if(LA[i][j] == u)
         grau.first++;
+
   return grau;
 }
 
