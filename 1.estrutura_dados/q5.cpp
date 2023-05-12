@@ -12,3 +12,47 @@ Agora, considere que em um grupo de n pessoas tenha as suas possibilidades de co
 
 Implemente uma função que dada uma árvore, retorne o seu vértice central. Caso haja empate, imprima o vértice com o menor índice lexicográfico.
 */
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+typedef vector<int> vi;
+
+// Implemente sua resposta aqui
+int centro(vi *LA, int n)
+{
+	int centro;
+
+	// TO DO
+
+	return centro;
+}
+
+int main()
+{
+	int n, m;
+
+	while (cin >> n >> m)
+	{
+		// considerando que os índices dos vértices começam de 0 e vão até n-1
+		vi *LA = new vector<int>[n];
+
+		// leitura do grafo
+		int u, v;
+		for (int i = 0; i < m; i++)
+		{
+			cin >> u >> v; // lendo as arestas do grafo
+
+			// grafo nao-direcionado
+			LA[u].push_back(v); // u -> v
+			LA[v].push_back(u); // v -> u
+		}
+
+		/*
+		cout << centro(LA, n) << endl;
+		*/
+	}
+
+	return 0;
+}
