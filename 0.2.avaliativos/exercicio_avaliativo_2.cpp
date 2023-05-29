@@ -1,4 +1,3 @@
-// https://www.beecrowd.com.br/judge/pt/custom-problems/view/3288
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -67,7 +66,7 @@ private:
    vi rank;
 };
 
-int kruskall(uvp &arestas, int n, int m)
+int kruskall(uvp &arestas, int n, int m, int trajetoIni, int trajetoFim)
 {
    sort(arestas.begin(), arestas.end());
    reverse(arestas.begin(), arestas.end());
@@ -90,8 +89,8 @@ int kruskall(uvp &arestas, int n, int m)
          if (e.first < resultado)
             resultado = e.first;
          numero_arestas++;
-         if (numero_arestas == n - 1)
-            break;
+         if (numero_arestas == n - 1 || ufds.mesmoConjunto(trajetoIni, trajetoFim))
+            return resultado;
 
          ufds.uniao(u, v);
       }
@@ -112,14 +111,15 @@ int main()
    {
       cin >> u >> v >> w;
       arestas.push_back(make_pair(w, make_pair(u, v)));
+      arestas.push_back(make_pair(w, make_pair(v, u)));
    }
 
    cin >> trajetoIni >> trajetoFim >> numFunc >> u >> v;
 
    cout << endl
-        << kruskall(arestas, numRuas, numIntersec)
+        << kruskall(arestas, numRuas, numIntersec, trajetoIni, trajetoFim)
         << endl
-        << ceil(numFunc / kruskall(arestas, numRuas, numIntersec));
+        << ceil(numFunc / kruskall(arestas, numRuas, numIntersec, trajetoIni, trajetoFim));
 
    return 0;
 }
