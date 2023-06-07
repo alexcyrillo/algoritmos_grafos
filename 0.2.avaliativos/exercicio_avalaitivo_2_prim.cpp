@@ -14,13 +14,9 @@ typedef vector<ii> vii;
 typedef vector<pair<int, ii>> uvp;
 
 vi explorado;
-
 priority_queue<ii> Q;
-
 vector<vii> LA, LANova;
-
 int n, m;
-
 uvp lista;
 
 void dfs(int u, int *pai, int *d)
@@ -135,7 +131,7 @@ int main()
          dfs(trajetoIni, pai, d);
          int menor = 100000000;
 
-         cout << ceil(numFunc / float(dfsar(pai, trajetoFim, menor) - 1));
+         cout << ceil(numFunc / float(dfsar(pai, trajetoFim, menor) - 1)) << endl;
       }
 
       delete[] pai;
@@ -144,6 +140,5 @@ int main()
       LANova.clear();
       cin >> n >> m;
    }
-
    return 0;
 }
