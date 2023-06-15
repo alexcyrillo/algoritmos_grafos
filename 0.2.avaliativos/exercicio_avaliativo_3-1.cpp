@@ -1,51 +1,54 @@
-// https://www.beecrowd.com.br/judge/pt/problems/view/1931
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <utility>
-
+#include <functional>
 using namespace std;
 
-#define INF 1000000000
+vector<pair<int, int>> *LA;
+vector<int> d;
+int n, m;
 
-typedef pair<int, int> ii;
-typedef vector<int> vi;
-typedef vector<ii> vii;
-
-/*
- * Variaveis globais
- */
-
-// lista de adjacencia
-vii *LA;
-
-// valor da variavel x, originalmente relacionada a melhor estimativa de distancia do vertice em relacao a origem
-vi x;
-
-// numero de vertices
-int n;
-
-// numero de arestas
-int m;
-
-void bellman_ford(int org)
+int dijkstra(int org)
 {
-   x.assign(n, INF);
-   x[org] = 0;
+   d.assign(n, 1);
 
-   // variaveis auxiliares
-   int v, peso;
-   ii vizinho;
+   // a distance da origem "org" eh sempre zero
+   d[org] = 1;
 
-   for (int i = 0; i < n - 1; i++)
+   // heap que auxilia na obtencao do vertice com maior prioridade, a cada iteracao
+   priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> heap;
+
+   // primeiro par inserido na heap: "org" com custo zero
+   heap.push(make_pair(1, org));
+
+   vector<bool> visitado;
+   visitado.assign(n, false);
+
+   // o algoritmo para quando a heap estiver vazia
+   while (!heap.empty())
    {
-      for (int u = 0; u < n; u++)
+      pair<int, int> vertice = heap.top();
+      heap.pop();
+
+      int distancia = vertice.first, u = vertice.second, custo;
+
+      if (visitado[u]) // "u" jah foi explorado
+         continue;
+
+      visitado[u] = true;
+
+      for (int j = 0; j < (int)LA[u].size(); j++)
       {
-         for (int j = 0; j < (int)LA[u].size(); j++)
+         pair<int, int> vizinho = LA[u][j];
+         int v = vizinho.first, prob = vizinho.second;
+
+         // tentativa de melhorar a estimativa de menor caminho da origem ao vertice v
+         custo = d[u] * prob;
+         if (custo < d[v])
          {
-            ii vizinho = LA[u][j];
-            v = vizinho.first;
-            peso = vizinho.second;
-            x[v] = min(x[v], x[u] + peso);
+            d[v] = custo;
+            heap.push(make_pair(d[v], v));
          }
       }
    }
@@ -54,18 +57,20 @@ void bellman_ford(int org)
 int main()
 {
    cin >> n >> m;
-   LA = new vii[n];
 
+   LA = new vector<pair<int, int>>[n];
    int u, v, p;
-   for (int j = 0; j < m; j++)
+   for (int i = 0; i < m; i++)
    {
       cin >> u >> v >> p;
-      LA[u].push_back(ii(v, p));
+      u--;
+      v--;
+      LA[u].push_back(make_pair(v, p));
    }
 
-   bellman_ford(0);
-   for (int i = 0; i < n; i++)
-      cout << "x[" << i << "]: " << x[i] << endl;
+   dijkstra(1);
+
+   
 
    return 0;
 }
