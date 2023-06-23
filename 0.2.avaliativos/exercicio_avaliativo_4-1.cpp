@@ -1,34 +1,31 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
 bool *visitado;
-vector <int> *LA, pilha;
+vector <int> *LA;
 int n, m;
 
-void DFS(int u)
+void DFS(int u, vector<int> &pilha)
 {
   visitado[u] = true;
   for(int i = 0; i < LA[u].size(); i++)
   {
     if(visitado[LA[u][i]] == false)
-      DFS(LA[u][i]);    
+      DFS(LA[u][i], pilha);    
   }
   pilha.push_back(u);
 }
 
-void ordenar(int u)
+bool teste(bool verif, vector<int> &pilha)
 {
-  for(int i = 0; i < n; i++)
-    visitado[i] = false;
-  DFS(0);
-  bool verif = false;
   int ePilha1, ePilha2;
-  for(int i = n - 1; i > 0; i--)
+  for(int i = 0; i < n; i++)
   {
     ePilha1 = pilha[i]; 
-    ePilha2 = pilha[i - 1];
+    ePilha2 = pilha[i + 1];
     for(int j = 0; j < LA[ePilha1].size(); j++)
     {
       if(!verif)
@@ -45,8 +42,21 @@ void ordenar(int u)
       }
     }
   }
+  return verif;
+}
+
+void ordenar(int u)
+{
+  vector<int> pilha;
+  for(int i = 0; i < n; i++)
+    visitado[i] = false;
+  DFS(0, pilha);
+  reverse(pilha.begin(), pilha.end());
+  bool verif;
+  verif = teste(false, pilha);
   if(verif)
   {
+    reverse(pilha.begin(), pilha.end());
     for(int i = 0; i < n; i++)
     {
       cout << pilha.back() << ' ';
