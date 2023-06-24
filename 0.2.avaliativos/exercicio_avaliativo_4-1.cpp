@@ -1,90 +1,74 @@
+// https://www.beecrowd.com.br/judge/pt/custom-problems/view/3358
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
-bool *visitado;
-vector <int> *LA;
-int n, m;
+vector<int> *LA, visitado, pilha, pai;
+bool verif = true;
 
-void DFS(int u, vector<int> &pilha)
+void DFS(int u)
 {
-  visitado[u] = true;
+  visitado[u] = 1;
   for(int i = 0; i < LA[u].size(); i++)
   {
-    if(visitado[LA[u][i]] == false)
-      DFS(LA[u][i], pilha);    
+    if(visitado[LA[u][i]] == 0)
+    {
+      pai[LA[u][i]] = u;
+      DFS(LA[u][i]);
+    }
+    if(pai[LA[u][i]] != u && visitado[LA[u][i]] == 1)
+      verif = false;
   }
   pilha.push_back(u);
+  visitado[u] = -1;
 }
 
-bool teste(bool verif, vector<int> &pilha)
+void ordenar(int n, int u)
 {
-  int ePilha1, ePilha2;
+  visitado.assign(n, 0);
+  pai.assign(n, -1);
   for(int i = 0; i < n; i++)
-  {
-    ePilha1 = pilha[i]; 
-    ePilha2 = pilha[i + 1];
-    for(int j = 0; j < LA[ePilha1].size(); j++)
-    {
-      if(!verif)
-      {
-        if(ePilha2 == LA[ePilha1][j])
-        {
-          verif = true;
-          break;
-        }
-        else
-        {
-          verif = false;
-        }
-      }
-    }
-  }
-  return verif;
-}
-
-void ordenar(int u)
-{
-  vector<int> pilha;
-  for(int i = 0; i < n; i++)
-    visitado[i] = false;
-  DFS(0, pilha);
-  reverse(pilha.begin(), pilha.end());
-  bool verif;
-  verif = teste(false, pilha);
+    if(visitado[i] == 0)
+      DFS(i);
+ 
   if(verif)
   {
-    reverse(pilha.begin(), pilha.end());
     for(int i = 0; i < n; i++)
     {
-      cout << pilha.back() << ' ';
+      if(i == n - 1)
+        std::cout << pilha.back();
+      else
+        std::cout << pilha.back() << ' ';
+      
       pilha.pop_back();
     }
   }
   else
-    cout << -1;
-  cout << endl;
-  pilha.clear();
+  {
+    std::cout << -1;
+    for(int i = 0; i < n; i++)
+      pilha.pop_back();
+  }
+  std::cout << endl;
 }
  
 int main() {
-  int a, b;
-  do{
-    cin >> n >> m;
-    if(n != 0 && m != 0)
+  int n, m;
+  cin >> n >> m;
+  while (n != 0 && m != 0)
+  {
+    int a, b;
+    LA = new vector<int>[n];
+    for(int i = 0; i < m; i++)
     {
-      LA = new vector<int>[n];
-      visitado = new bool[n];
-      for(int i = 0; i < m; i++)
-      {
-        cin >> a >> b;
-        if(a != 0 || b != 0)
-          LA[a].push_back(b);
-      }
-      ordenar(0);
+      cin >> a >> b;
+      if(a != 0 || b != 0)
+        LA[a].push_back(b);
     }
-  } while (n != 0 && m != 0);
+    ordenar(n, 0);
+    verif = true;
+    cin >> n >> m;
+  }
   return 0;
 }
