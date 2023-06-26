@@ -7,13 +7,13 @@ using namespace std;
 
 #define INF 100000000
 
-typedef pair<int, int> ii;
+vector<pair<int, int>> *LA;
+int n;
+int m;
+vector<int> d;
+vector<int> numArestas;
 
-vector<ii> *LA, *LAAux;
-vector<int> d, numArestas;
-int n, m;
-
-int dijkstra(int org, int dest)
+pair<int, int> dijkstra(int org, int dest)
 {
    d.assign(n, INF);
    numArestas.assign(n, INF);
@@ -26,21 +26,21 @@ int dijkstra(int org, int dest)
 
    while (!heap.empty())
    {
-      ii vertice = heap.top();
+      pair<int, int> vertice = heap.top();
       heap.pop();
 
       int distancia = vertice.first;
       int u = vertice.second;
 
-      if (u == dest && (numArestas[u] % 2 == 0))
-         return d[dest];
+      if (u == dest)
+         break;
 
       if (distancia > d[u])
          continue;
 
       for (int j = 0; j < (int)LA[u].size(); j++)
       {
-         ii vizinho = LA[u][j];
+         pair<int, int> vizinho = LA[u][j];
          int v = vizinho.first;
          int peso = vizinho.second;
 
@@ -53,24 +53,28 @@ int dijkstra(int org, int dest)
       }
    }
 
-   return -1;
+   return make_pair(d[dest], numArestas[dest]);
 }
 
 int main()
 {
    cin >> n >> m;
 
-   LA = new vector<ii>[n];
+   LA = new vector<pair<int, int>>[n];
    int u, v, p;
    for (int i = 0; i < m; i++)
    {
-      cin >> u >> v >> p;
+      cin >> u >> v;
+      cin >> p;
       u--;
       v--;
       LA[u].push_back(make_pair(v, p));
    }
 
-   cout << dijkstra(0, n - 1);
+   pair<int, int> distancia = dijkstra(0, n - 1);
+
+   cout << "Distancia em peso: " << distancia.first << endl;
+   cout << "Distancia em numero de arestas: " << distancia.second << endl;
 
    return 0;
 }
